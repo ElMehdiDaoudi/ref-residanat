@@ -1,0 +1,13 @@
+{
+  "titre_cours": "HTA",
+  "grand_sujet": "Médecine",
+  "specialite": "Cardiologie",
+  "mots_cles": [
+    "HTA",
+    "hypertension artérielle",
+    "pression artérielle",
+    "phéochromocytome",
+    "sténose de l'artère rénale"
+  ],
+  "texte_cours": "## Définition\n\nL'hypertension artérielle est une élévation chronique de la pression artérielle.\n\n| Grade | PAS | PAD |\n|---|---|---|\n| 1 | 140-159 | 90-99 |\n| 2 | 160-179 | 100-109 |\n\n> Facteur de risque cardiovasculaire majeur."
+}

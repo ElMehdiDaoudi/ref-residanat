@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>MedRef — Base de données des cours (générée automatiquement)</title>
+<meta name="robots" content="noindex">
+<style>
+  body { font-family: system-ui, sans-serif; background:#0e0d12; color:#f0eef5; padding:2rem; }
+  h1 { font-size:1.3rem; }
+  p { color:#b3aec2; }
+  table { border-collapse: collapse; width:100%; font-size:0.85rem; margin-top:1rem; }
+  th, td { text-align:left; padding:6px 10px; border-bottom:1px solid #2a2733; }
+  th { color:#7a7488; font-weight:600; }
+  code { color:#33c3d6; }
+</style>
+</head>
+<body>
+<h1>MedRef — Base de données des cours</h1>
+<p>
+  Fichier généré et mis à jour automatiquement par <code>generate_site.py</code>.
+  Ne pas éditer manuellement — utilisez un vecteur JSON en entrée du script pour ajouter ou modifier des cours.
+  <br>Dernière génération : 2026-08-07T16:35:24+00:00 ·
+  1 grand(s) sujet(s) · 2 spécialité(s) · 3 cours.
+</p>
+<table>
+<thead><tr><th>Grand sujet</th><th>Spécialité</th><th>Cours</th><th>Fichier</th></tr></thead>
+<tbody>
+<tr><td>Médecine</td><td>Cardiologie</td><td>Angor</td><td><code>content/markdown/medecine/cardiologie/angor.md</code></td></tr><tr><td>Médecine</td><td>Cardiologie</td><td>HTA</td><td><code>content/markdown/medecine/cardiologie/hta.md</code></td></tr><tr><td>Médecine</td><td>Pneumologie</td><td>Asthme</td><td><code>content/markdown/medecine/pneumologie/asthme.md</code></td></tr>
+</tbody>
+</table>
+
+<!-- Données consommées par le frontend (assets/js/dataLoader.js) : NE PAS RENOMMER cet id. -->
+<script type="application/json" id="courses-db">
+{
+  "generated_at": "2026-08-07T16:35:24+00:00",
+  "subjects": [
+    {
+      "id": "medecine",
+      "title": "Médecine",
+      "specialties": [
+        {
+          "id": "cardiologie",
+          "title": "Cardiologie",
+          "courses": [
+            {
+              "id": "angor",
+              "title": "Angor",
+              "slug": "angor",
+              "path": "content/markdown/medecine/cardiologie/angor.md",
+              "keywords": [
+                "douleur thoracique",
+                "coronaropathie",
+                "angor stable",
+                "trinitrine"
+              ],
+              "search_blob": "Définition L'angor (angine de poitrine) traduit une ischémie myocardique transitoire, le plus souvent liée à une coronaropathie. Signes - Douleur thoracique constrictive - Déclenchée par l'effort - Calmée par le repos ou la trinitrine"
+            },
+            {
+              "id": "hta",
+              "title": "HTA",
+              "slug": "hta",
+              "path": "content/markdown/medecine/cardiologie/hta.md",
+              "keywords": [
+                "sténose de l'artère rénale",
+                "hypertension artérielle",
+                "pression artérielle",
+                "phéochromocytome",
+                "HTA"
+              ],
+              "search_blob": "Définition L'hypertension artérielle est une élévation chronique de la pression artérielle. Grade PAS PAD --- --- --- 1 140-159 90-99 2 160-179 100-109 Facteur de risque cardiovasculaire majeur."
+            }
+          ]
+        },
+        {
+          "id": "pneumologie",
+          "title": "Pneumologie",
+          "courses": [
+            {
+              "id": "asthme",
+              "title": "Asthme",
+              "slug": "asthme",
+              "path": "content/markdown/medecine/pneumologie/asthme.md",
+              "keywords": [
+                "corticoïdes inhalés",
+                "bronchodilatateur",
+                "dyspnée",
+                "asthme",
+                "DEP"
+              ],
+              "search_blob": "Définition L'asthme est une maladie inflammatoire chronique des voies aériennes. - Toux - Sibilants - Dyspnée"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+</script>
+</body>
+</html>

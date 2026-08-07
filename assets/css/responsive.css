@@ -1,0 +1,80 @@
+/*
+  responsive.css
+  Mobile-first: base rules (outside media queries, in other files) already
+  target small-screen portrait phones. This file layers on larger screens
+  and handles the phone/tablet sidebar-as-overlay behavior.
+
+  Breakpoints:
+    - base            : phone portrait   (< 480px)
+    - >= 480px         : phone landscape
+    - >= 768px         : tablet portrait
+    - >= 1024px        : tablet landscape / small desktop
+    - >= 1280px        : desktop
+*/
+
+/* ---------- Phone (portrait + landscape): sidebar becomes an overlay drawer ---------- */
+@media (max-width: 767px) {
+  .app { grid-template-columns: 1fr; }
+
+  .sidebar {
+    position: fixed;
+    inset: 0 20% 0 0;
+    z-index: 50;
+    width: auto;
+    max-width: 320px;
+    transform: translateX(-100%);
+    transition: transform var(--dur-base) var(--ease);
+    box-shadow: var(--shadow-2);
+  }
+  .app.sidebar-open .sidebar { transform: translateX(0); }
+  .app.sidebar-open .sidebar-backdrop { display: block; }
+
+  .mobile-only { display: inline-flex; }
+
+  .content { padding: var(--space-4) var(--space-4) var(--space-7); }
+  .home-title { font-size: var(--fs-xl); }
+  .home-subjects { grid-template-columns: 1fr; }
+
+  .markdown-body h1 { font-size: var(--fs-xl); }
+  .markdown-body h2 { font-size: var(--fs-md); }
+
+  .home-stats { gap: var(--space-3); }
+  .home-stat { min-width: 120px; padding: var(--space-3) var(--space-4); }
+}
+
+/* Phone landscape refinement: shorter viewport height, tighten vertical rhythm */
+@media (max-width: 900px) and (max-height: 480px) and (orientation: landscape) {
+  .topbar { height: 48px; }
+  .home-hero { padding: var(--space-4) 0 var(--space-3); }
+  .content { padding-top: var(--space-3); }
+}
+
+/* ---------- Tablet portrait and up: sidebar becomes a permanent column again ---------- */
+@media (min-width: 768px) {
+  .app { grid-template-columns: var(--sidebar-w) 1fr; }
+  .sidebar {
+    position: relative;
+    inset: auto;
+    max-width: none;
+    transform: none;
+    box-shadow: none;
+  }
+  .sidebar-backdrop { display: none !important; }
+  .mobile-only { display: none; }
+  .app.sidebar-collapsed .sidebar { width: 0; }
+}
+
+/* ---------- Tablet: narrower sidebar to save space ---------- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root { --sidebar-w: 240px; }
+  .content { padding: var(--space-5) var(--space-5) var(--space-7); }
+}
+
+/* ---------- Desktop ---------- */
+@media (min-width: 1024px) {
+  .content { padding: var(--space-7) var(--space-6) var(--space-8); }
+}
+
+@media (min-width: 1280px) {
+  :root { --sidebar-w: 300px; }
+}

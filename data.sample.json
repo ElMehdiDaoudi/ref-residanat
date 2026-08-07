@@ -1,0 +1,16 @@
+[
+  {
+    "titre_cours": "Diabète de type 2",
+    "grand_sujet": "Médecine",
+    "specialite": "Endocrinologie",
+    "mots_cles": [
+      "diabète de type 2",
+      "metformine",
+      "HbA1c",
+      "insulinorésistance",
+      "rétinopathie",
+      "néphropathie"
+    ],
+    "texte_cours": "## Définition\n\nLe diabète de type 2 est une hyperglycémie chronique liée à une insulinorésistance associée à un déficit relatif de l'insulinosécrétion.\n\n## Critères diagnostiques\n\n| Critère | Seuil |\n|---|---|\n| Glycémie à jeun | ≥ 1,26 g/L (2 fois) |\n| Glycémie aléatoire + symptômes | ≥ 2 g/L |\n| HbA1c | ≥ 6,5 % |\n\n## Complications\n\n- Microangiopathiques : rétinopathie, néphropathie, neuropathie\n- Macroangiopathiques : coronaropathie, AVC, artériopathie des membres inférieurs\n\n> Le dépistage annuel des complications est indispensable dès le diagnostic.\n\n## Traitement de première ligne\n\nLa **metformine** reste le traitement de première intention en l'absence de contre-indication."
+  }
+]
