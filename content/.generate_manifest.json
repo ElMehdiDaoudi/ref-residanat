@@ -1,5 +1,7 @@
 {
   "medecine/cardiologie/angor": "446f025871cb3f0a7bf08968e7d0d03d",
   "medecine/cardiologie/hta": "7e711efdf18b2bac181e182b667ae07e",
-  "medecine/pneumologie/asthme": "42b69c967cfb57e6538f7c3c9d115758"
+  "medecine/pneumologie/asthme": "42b69c967cfb57e6538f7c3c9d115758",
+  "medecine/endocrinologie/diabete-de-type-2": "de168909f57dd6a485f3af988918cf09",
+  "medecine/cardiologie/10-thromboses-veineuses-des-membres-inferieurs-diagnostic-et-traitement": "22b7e3cb09ef6e5eab9488c1504dc3f9"
 }
