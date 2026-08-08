@@ -11,7 +11,8 @@
  * specialties; click a specialty -> see its courses; click a course -> read it.
  */
 
-import { state, pushRecentCourse, getRecentCourses } from "./state.js";
+import { state, pushRecentCourse, getRecentCourses, getSortMode } from "./state.js";
+import { sortCourses } from "./courseSort.js";
 import { loadCourseMarkdown } from "./dataLoader.js";
 import {
   renderMarkdownToHtml,
@@ -45,6 +46,9 @@ function showView(view) {
 
 export function initRouter() {
   window.addEventListener("hashchange", handleRoute);
+  // Re-render the current view (course lists) when the sort order changes,
+  // without touching the URL/hash.
+  document.addEventListener("medref:sortchange", handleRoute);
   handleRoute();
 }
 
@@ -121,7 +125,8 @@ function renderSpecialtyView(subjectId, specialtyId) {
   document.getElementById("specialtyTitle").textContent = specialty.title;
 
   const list = document.getElementById("specialtyCourses");
-  list.innerHTML = specialty.courses
+  const sortedCourses = sortCourses(specialty.courses, getSortMode());
+  list.innerHTML = sortedCourses
     .map(
       (c) => `
       <a class="course-list-item" href="#/${c.id}">

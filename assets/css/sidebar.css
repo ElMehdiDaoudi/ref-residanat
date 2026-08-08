@@ -152,3 +152,34 @@
   background: rgba(0,0,0,0.5);
   z-index: 40;
 }
+
+/* Course display order toggle (A→Z / Récents) */
+.sidebar-sort {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 var(--space-4) var(--space-3);
+}
+.sidebar-sort-label {
+  font-size: var(--fs-xs);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.sort-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.sort-btn:hover { border-color: var(--accent-500); color: var(--text-primary); }
+.sort-btn[aria-pressed="true"] {
+  background: var(--accent-600);
+  border-color: var(--accent-600);
+  color: #fff;
+}

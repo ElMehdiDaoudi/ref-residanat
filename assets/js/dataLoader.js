@@ -19,9 +19,21 @@ const markdownCache = new Map();
 const DATABASE_URL = "content/database.html";
 const DB_SCRIPT_ID = "courses-db";
 
+// A single cache-buster shared by every fetch in this page load. GitHub
+// Pages is served through a CDN whose caching behavior can't be fully
+// controlled via response headers, so the reliable fix is to make each
+// page load request a distinctly-URLed resource (?v=<timestamp>) rather
+// than relying on the browser/CDN to revalidate a previously cached one.
+const CACHE_BUSTER = Date.now();
+
+function withCacheBuster(url) {
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}v=${CACHE_BUSTER}`;
+}
+
 /** Fetch content/database.html, extract its embedded JSON, and build the coursesById lookup map. */
 export async function loadIndex() {
-  const res = await fetch(DATABASE_URL, { cache: "force-cache" });
+  const res = await fetch(withCacheBuster(DATABASE_URL), { cache: "no-store" });
   if (!res.ok) throw new Error(`Impossible de charger ${DATABASE_URL} (${res.status})`);
   const html = await res.text();
 
@@ -67,7 +79,7 @@ export async function loadCourseMarkdown(courseId) {
   const course = state.coursesById.get(courseId);
   if (!course) throw new Error(`Cours inconnu: ${courseId}`);
 
-  const res = await fetch(course.path);
+  const res = await fetch(withCacheBuster(course.path), { cache: "no-store" });
   if (!res.ok) throw new Error(`Impossible de charger ${course.path} (${res.status})`);
   const text = await res.text();
   markdownCache.set(courseId, text);

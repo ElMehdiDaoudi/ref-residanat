@@ -8,6 +8,7 @@ const LS_KEYS = {
   theme: "medref:theme",
   sidebarCollapsed: "medref:sidebarCollapsed",
   recent: "medref:recentCourses",
+  sortMode: "medref:sortMode",
 };
 
 export const state = {
@@ -53,8 +54,18 @@ export function getRecentCourses() {
   }
 }
 
-/** The very last course opened — used to restore state on next visit. */
+/** The last course opened — used to restore state on next visit. */
 export function getLastCourseId() {
   const list = getRecentCourses();
   return list.length ? list[0] : null;
+}
+
+/** Course display order: "alpha" (A→Z) or "recent" (most recently added first). */
+export function getSortMode() {
+  const mode = localStorage.getItem(LS_KEYS.sortMode);
+  return mode === "recent" ? "recent" : "alpha";
+}
+
+export function setSortMode(mode) {
+  localStorage.setItem(LS_KEYS.sortMode, mode === "recent" ? "recent" : "alpha");
 }

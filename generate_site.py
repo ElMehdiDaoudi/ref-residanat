@@ -371,6 +371,7 @@ def index_to_working_subjects(index: dict | None) -> dict:
                         "keywords": c.get("keywords", []),
                         "path": c["path"],
                         "search_blob": c.get("search_blob", ""),
+                        "added_at": c.get("added_at"),
                         # no "body": untouched courses never need their .md rewritten
                     }
                     for c in specialty.get("courses", [])
@@ -379,10 +380,12 @@ def index_to_working_subjects(index: dict | None) -> dict:
     return subjects
 
 
-def merge_subjects(existing: dict, new: dict) -> dict:
+def merge_subjects(existing: dict, new: dict, run_timestamp: str) -> dict:
     """
     Merge the new batch into the existing database (deep merge).
-    A course present in both is UPDATED (new wins); everything else is kept.
+    A course present in both is UPDATED (new content wins, but its original
+    "added_at" is preserved — editing a course doesn't bump its add date).
+    A genuinely new course gets "added_at" = run_timestamp.
     """
     merged = {
         s_slug: {"title": s["title"], "specialties": {sp_slug: {"title": sp["title"], "courses": dict(sp["courses"])}
@@ -394,7 +397,11 @@ def merge_subjects(existing: dict, new: dict) -> dict:
         merged.setdefault(s_slug, {"title": s["title"], "specialties": {}})
         for sp_slug, sp in s["specialties"].items():
             merged[s_slug]["specialties"].setdefault(sp_slug, {"title": sp["title"], "courses": {}})
-            merged[s_slug]["specialties"][sp_slug]["courses"].update(sp["courses"])
+            existing_courses = merged[s_slug]["specialties"][sp_slug]["courses"]
+            for course_id, course in sp["courses"].items():
+                previous = existing_courses.get(course_id)
+                course["added_at"] = previous["added_at"] if previous else run_timestamp
+                existing_courses[course_id] = course
 
     return merged
 
@@ -415,6 +422,7 @@ def build_index(subjects: dict) -> dict:
                     "path": c["path"],
                     "keywords": c["keywords"],
                     "search_blob": c["search_blob"],
+                    "added_at": c.get("added_at"),
                 }
                 for c in sorted(specialty["courses"].values(), key=lambda c: sort_key(c["title"]))
             ]
@@ -429,6 +437,44 @@ def build_index(subjects: dict) -> dict:
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "subjects": out_subjects,
     }
+
+
+def delete_courses(
+    subjects: dict, ids_to_delete: set[str], content_dir: Path, manifest: dict
+) -> tuple[dict, list[str], list[str]]:
+    """
+    Remove the given course ids from the working structure, delete their
+    .md file from disk, and drop their manifest entry. Empty specialties
+    and subjects left behind are pruned. Returns (subjects, deleted, not_found).
+    """
+    deleted: list[str] = []
+    remaining_ids = set(ids_to_delete)
+
+    for subject_slug in list(subjects.keys()):
+        subject = subjects[subject_slug]
+        for specialty_slug in list(subject["specialties"].keys()):
+            specialty = subject["specialties"][specialty_slug]
+            for course_id in list(specialty["courses"].keys()):
+                if course_id not in ids_to_delete:
+                    continue
+                course = specialty["courses"].pop(course_id)
+                remaining_ids.discard(course_id)
+                deleted.append(f"{course['title']} ({course_id})")
+
+                md_path = content_dir.parent / course["path"] if "path" in course else None
+                if md_path and md_path.exists():
+                    md_path.unlink()
+
+                manifest_key = f"{subject_slug}/{specialty_slug}/{course_id}"
+                manifest.pop(manifest_key, None)
+
+            if not specialty["courses"]:
+                del subject["specialties"][specialty_slug]
+        if not subject["specialties"]:
+            del subjects[subject_slug]
+
+    not_found = sorted(remaining_ids)
+    return subjects, deleted, not_found
 
 
 def find_id_collisions(index: dict) -> list[str]:
@@ -466,7 +512,8 @@ def render_database_html(index: dict) -> str:
             for c in sp["courses"]:
                 rows.append(
                     f"<tr><td>{escape_html(s['title'])}</td><td>{escape_html(sp['title'])}</td>"
-                    f"<td>{escape_html(c['title'])}</td><td><code>{escape_html(c['path'])}</code></td></tr>"
+                    f"<td>{escape_html(c['title'])}</td><td><code>{escape_html(c['id'])}</code></td>"
+                    f"<td><code>{escape_html(c['path'])}</code></td></tr>"
                 )
 
     return f"""<!DOCTYPE html>
@@ -489,12 +536,13 @@ def render_database_html(index: dict) -> str:
 <h1>MedRef — Base de données des cours</h1>
 <p>
   Fichier généré et mis à jour automatiquement par <code>generate_site.py</code>.
-  Ne pas éditer manuellement — utilisez un vecteur JSON en entrée du script pour ajouter ou modifier des cours.
+  Ne pas éditer manuellement — utilisez un vecteur JSON en entrée du script pour ajouter/modifier des cours,
+  ou <code>--delete &lt;ID&gt;</code> (colonne « ID » ci-dessous) pour en supprimer.
   <br>Dernière génération : {escape_html(index['generated_at'])} ·
   {subject_count} grand(s) sujet(s) · {specialty_count} spécialité(s) · {course_count} cours.
 </p>
 <table>
-<thead><tr><th>Grand sujet</th><th>Spécialité</th><th>Cours</th><th>Fichier</th></tr></thead>
+<thead><tr><th>Grand sujet</th><th>Spécialité</th><th>Cours</th><th>ID</th><th>Fichier</th></tr></thead>
 <tbody>
 {''.join(rows)}
 </tbody>
@@ -537,6 +585,14 @@ def main() -> None:
         "--reset-database", action="store_true",
         help="Ignore la base de données existante et la reconstruit uniquement à partir de ce lot",
     )
+    parser.add_argument(
+        "--delete", nargs="+", metavar="COURSE_ID", default=None,
+        help="Supprime un ou plusieurs cours de la base par identifiant (visible dans database.html ou l'URL #/<id>), puis quitte.",
+    )
+    parser.add_argument(
+        "--delete-file", default=None, metavar="FICHIER_JSON",
+        help="Fichier JSON contenant un tableau d'identifiants de cours à supprimer, puis quitte.",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input)
@@ -544,7 +600,8 @@ def main() -> None:
     content_dir = project_root / "content"
     content_dir.mkdir(parents=True, exist_ok=True)
 
-    if not input_path.exists():
+    delete_mode = bool(args.delete or args.delete_file)
+    if not delete_mode and not input_path.exists():
         raise SystemExit(f"Introuvable : {input_path}")
 
     database_path = content_dir / DATABASE_FILENAME
@@ -564,6 +621,45 @@ def main() -> None:
             print(f"⚠ {database_path} existe mais n'a pas pu être lu ; reconstruction depuis ce lot uniquement.")
 
     existing_subjects = index_to_working_subjects(existing_index)
+
+    # ---------------- Deletion mode: remove courses, then exit ----------------
+    if args.delete or args.delete_file:
+        if not existing_subjects:
+            raise SystemExit(f"Aucune base de données existante à {database_path} : rien à supprimer.")
+
+        ids_to_delete: set[str] = set(args.delete or [])
+        if args.delete_file:
+            delete_file_path = Path(args.delete_file)
+            if not delete_file_path.exists():
+                raise SystemExit(f"Introuvable : {delete_file_path}")
+            try:
+                extra_ids = json.loads(delete_file_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as e:
+                raise SystemExit(f"JSON invalide dans {delete_file_path} : {e}")
+            if not isinstance(extra_ids, list):
+                raise SystemExit(f"{delete_file_path} doit contenir un tableau JSON d'identifiants.")
+            ids_to_delete.update(str(i) for i in extra_ids)
+
+        subjects_after, deleted, not_found = delete_courses(
+            existing_subjects, ids_to_delete, content_dir, manifest
+        )
+        manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        index = build_index(subjects_after)
+        database_path.write_text(render_database_html(index), encoding="utf-8")
+
+        total_courses = sum(len(sp["courses"]) for s in index["subjects"] for sp in s["specialties"])
+        print(f"\n{len(deleted)} cours supprimé(s) :")
+        for d in deleted:
+            print(f"  - {d}")
+        if not_found:
+            print(f"\n⚠ {len(not_found)} identifiant(s) introuvable(s) dans la base :")
+            for nf in not_found:
+                print(f"  - {nf}")
+        print(f"\nTotal de cours restants en base : {total_courses}")
+        print(f"Base de données mise à jour : {database_path}")
+        return
+
     print(
         f"Base existante : {sum(len(sp['courses']) for s in existing_subjects.values() for sp in s['specialties'].values())} cours."
         if existing_subjects else "Aucune base existante — première génération."
@@ -581,7 +677,7 @@ def main() -> None:
     manifest.update(batch_manifest_entries)  # merge, don't replace: keep hashes of untouched courses
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    merged_subjects = merge_subjects(existing_subjects, new_subjects)
+    merged_subjects = merge_subjects(existing_subjects, new_subjects, run_timestamp=datetime.now(timezone.utc).isoformat(timespec="seconds"))
     index = build_index(merged_subjects)
     collisions = find_id_collisions(index)
 

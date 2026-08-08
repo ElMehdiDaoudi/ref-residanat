@@ -1,8 +1,4 @@
 {
-  "medecine/cardiologie/angor": "446f025871cb3f0a7bf08968e7d0d03d",
-  "medecine/cardiologie/hta": "7e711efdf18b2bac181e182b667ae07e",
-  "medecine/pneumologie/asthme": "42b69c967cfb57e6538f7c3c9d115758",
-  "medecine/endocrinologie/diabete-de-type-2": "de168909f57dd6a485f3af988918cf09",
   "medecine/cardiologie/10-thromboses-veineuses-des-membres-inferieurs-diagnostic-et-traitement": "22b7e3cb09ef6e5eab9488c1504dc3f9",
   "medecine/cardiologie/1-risque-cardio-vasculaire-facteurs-et-consequences-pathologiques": "82a2421a2c081ff8b53214a6a9e758da",
   "medecine/cardiologie/2-rhumatisme-articulaire-aigu-physiopathologie-diagnostic-traitement-et-prevention": "d4af166a9f5c71cdd6eb7759a1a60b23",
@@ -12,5 +8,15 @@
   "medecine/cardiologie/6-insuffisance-cardiaque-physiopathologie-diagnostic-et-traitement": "5486c9aa0507a4194dc4dd14dd5efc15",
   "medecine/cardiologie/7-pericardites-aigues-et-chroniques-diagnostic-traitement-evolution": "d7f2d1b93ccea7ab7fb46b35f71c972f",
   "medecine/cardiologie/8-cur-pulmonaire-chronique-cpc-diagnostic-et-prise-en-charge": "fdc975f6421c3a18b80e948d87414c50",
-  "medecine/cardiologie/10-hypertension-arterielle-hta-de-l-adulte": "6a3237b960247793c8119c857c006dc6"
+  "medecine/cardiologie/10-hypertension-arterielle-hta-de-l-adulte": "6a3237b960247793c8119c857c006dc6",
+  "medecine/cardiologie/010-thromboses-veineuses-des-membres-inferieurs-diagnostic-et-traitement": "6c2ecd0a8172fd4d1f7261c921bae7a7",
+  "medecine/cardiologie/001-risque-cardio-vasculaire-facteurs-et-consequences-pathologiques": "33fc647f2511238f5f9bd07dc529f112",
+  "medecine/cardiologie/002-rhumatisme-articulaire-aigu-physiopathologie-diagnostic-traitement-et-prevention": "c38368f3271b31356e6c2adccad9a981",
+  "medecine/cardiologie/003-les-valvulopathies-mitrales-diagnostic-et-prise-en-charge": "1fb95d38b5124b9da8dde29d076b9269",
+  "medecine/cardiologie/004-les-valvulopathies-aortiques-diagnostic-et-prise-en-charge": "9b8704d085241b333aa36922ad001c44",
+  "medecine/cardiologie/005-endocardites-infectieuses-physiopathologie-diagnostic-et-traitement": "62b7719361c3d6f504d6e014bd7320ef",
+  "medecine/cardiologie/006-insuffisance-cardiaque-physiopathologie-diagnostic-et-traitement": "92b39557cebe5f55c22b4a59e3d3a045",
+  "medecine/cardiologie/007-pericardites-aigues-et-chroniques-diagnostic-traitement-evolution": "940c1b09b02ff461679a6283c0f97f0d",
+  "medecine/cardiologie/008-cur-pulmonaire-chronique-cpc-diagnostic-et-prise-en-charge": "601200380f3f9380d3fe670935be1b72",
+  "medecine/cardiologie/009-hypertension-arterielle-hta-de-l-adulte": "02a272cba2c024990d2f3c7a54d17ec0"
 }

@@ -7,7 +7,7 @@
 
 import { getTheme, setTheme } from "./state.js";
 import { loadIndex } from "./dataLoader.js";
-import { renderSidebarTree, initSidebarToggle } from "./sidebar.js";
+import { renderSidebarTree, initSidebarToggle, initSortControl } from "./sidebar.js";
 import { buildSearchCorpus, initSearch } from "./search.js";
 import { initRouter } from "./router.js";
 
@@ -31,6 +31,7 @@ function updateThemeLabel(theme) {
 async function bootstrap() {
   initTheme();
   initSidebarToggle();
+  initSortControl();
   initSearch();
 
   try {

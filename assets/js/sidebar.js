@@ -5,7 +5,8 @@
  * open/close drawer behavior (mobile).
  */
 
-import { state, isSidebarCollapsed, setSidebarCollapsed } from "./state.js";
+import { state, isSidebarCollapsed, setSidebarCollapsed, getSortMode, setSortMode } from "./state.js";
+import { sortCourses } from "./courseSort.js";
 
 const treeEl = document.getElementById("sidebarTree");
 const appEl = document.getElementById("app");
@@ -61,7 +62,8 @@ function buildSpecialtyNode(specialty) {
   const childrenWrap = document.createElement("div");
   childrenWrap.className = "tree-children" + (expanded ? " open" : "");
 
-  for (const course of specialty.courses) {
+  const sortedCourses = sortCourses(specialty.courses, getSortMode());
+  for (const course of sortedCourses) {
     const link = document.createElement("a");
     link.className = "tree-course-link";
     link.href = `#/${course.id}`;
@@ -157,4 +159,28 @@ export function initSidebarToggle() {
 
 function closeMobileDrawer() {
   appEl.classList.remove("sidebar-open");
+}
+
+/* ---------------- Course display order (A→Z / Récents) ---------------- */
+
+export function initSortControl() {
+  const buttons = document.querySelectorAll(".sort-btn");
+  const applyPressedState = (mode) => {
+    buttons.forEach((btn) => btn.setAttribute("aria-pressed", String(btn.dataset.sort === mode)));
+  };
+
+  applyPressedState(getSortMode());
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const mode = btn.dataset.sort;
+      setSortMode(mode);
+      applyPressedState(mode);
+      renderSidebarTree();
+      // Let router.js know it should re-render the current view (e.g. a
+      // specialty's course list) with the new order. Avoids a circular
+      // import between sidebar.js and router.js.
+      document.dispatchEvent(new CustomEvent("medref:sortchange"));
+    });
+  });
 }
