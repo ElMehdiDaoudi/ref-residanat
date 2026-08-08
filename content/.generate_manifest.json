@@ -3,5 +3,14 @@
   "medecine/cardiologie/hta": "7e711efdf18b2bac181e182b667ae07e",
   "medecine/pneumologie/asthme": "42b69c967cfb57e6538f7c3c9d115758",
   "medecine/endocrinologie/diabete-de-type-2": "de168909f57dd6a485f3af988918cf09",
-  "medecine/cardiologie/10-thromboses-veineuses-des-membres-inferieurs-diagnostic-et-traitement": "22b7e3cb09ef6e5eab9488c1504dc3f9"
+  "medecine/cardiologie/10-thromboses-veineuses-des-membres-inferieurs-diagnostic-et-traitement": "22b7e3cb09ef6e5eab9488c1504dc3f9",
+  "medecine/cardiologie/1-risque-cardio-vasculaire-facteurs-et-consequences-pathologiques": "82a2421a2c081ff8b53214a6a9e758da",
+  "medecine/cardiologie/2-rhumatisme-articulaire-aigu-physiopathologie-diagnostic-traitement-et-prevention": "d4af166a9f5c71cdd6eb7759a1a60b23",
+  "medecine/cardiologie/3-les-valvulopathies-mitrales-diagnostic-et-prise-en-charge": "bd99c3c9c2d71c300414d616e5ba89a8",
+  "medecine/cardiologie/4-les-valvulopathies-aortiques-diagnostic-et-prise-en-charge": "a67b9b2e4038351cd6ecaff8f0ee5bef",
+  "medecine/cardiologie/5-endocardites-infectieuses-physiopathologie-diagnostic-et-traitement": "e55d32d134efe206ee0bea472b2b23e0",
+  "medecine/cardiologie/6-insuffisance-cardiaque-physiopathologie-diagnostic-et-traitement": "5486c9aa0507a4194dc4dd14dd5efc15",
+  "medecine/cardiologie/7-pericardites-aigues-et-chroniques-diagnostic-traitement-evolution": "d7f2d1b93ccea7ab7fb46b35f71c972f",
+  "medecine/cardiologie/8-cur-pulmonaire-chronique-cpc-diagnostic-et-prise-en-charge": "fdc975f6421c3a18b80e948d87414c50",
+  "medecine/cardiologie/10-hypertension-arterielle-hta-de-l-adulte": "6a3237b960247793c8119c857c006dc6"
 }
